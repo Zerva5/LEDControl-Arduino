@@ -92,10 +92,6 @@ void setup() {
     Strip.items[0].curIndex = 10;
     Strip.items[0].colors[0].rgb[2] = 0;
     Strip.items[0].colors[0].rgb[1] = 0;
-    
-
-//    Serial.begin(9600);
-//    Serial.println("<Ready For Command>");
 
     STRIP.begin();
 
@@ -284,13 +280,14 @@ int ChangeItemCount(int newItemCount){
     if(lengthChange > 0){
         Strip.items = (Item *)realloc(Strip.items, sizeof(Item) * newItemCount);
         for (int i = 0; i < lengthChange; i++) {
-            // itemCount = 2
-            // max index items[1]
             Item_init(&Strip.items[i + Strip.itemCount], colorCount_d);
         }
     }else if(lengthChange < 0){
         for (int i = 0; i < (lengthChange * -1); i++) {
-            Item_close(&Strip.items[Strip.itemCount - i]);
+            // have 10 items, max index items[9]
+            // remove 10, includinmg items[0]
+            // 
+            Item_close(&Strip.items[Strip.itemCount - i - 1]);
         }
         Strip.items = (Item *)realloc(Strip.items, sizeof(Item) * newItemCount);
     }
@@ -301,7 +298,6 @@ int ChangeItemCount(int newItemCount){
 
 void ChangeColorCount(Item * item, int newColorCount){
     int lengthChange = newColorCount - item->colorCount;
-    printf("change: %i\n", lengthChange);
 
     if(lengthChange > 0){
         item->colors = (colorID *)realloc(item->colors, sizeof(colorID) * newColorCount);
@@ -342,23 +338,9 @@ void Strip_init(LEDStrip * newStrip, int itemCount){
 
     newStrip->active = 1;
 
-//    newStrip->LEDType = default;
-
     newStrip->itemCount = itemCount;
 
     newStrip->items = (Item *)malloc(sizeof(Item) * itemCount);
-
-
-//    Color_init(&newStrip->items[0].colors[0], 3);
-//    newStrip->items[0].colors[0].len = 11;
-    //    Item_init(&newStrip->items[0], 3);
-
-//    Serial.println(newStrip->items[0].colors[0].len);
-//    Serial.println(Strip.items[0].colors[0].len);
-
-//
-
-
 }
 
 void Item_init(Item * newItem, int colorCount){
