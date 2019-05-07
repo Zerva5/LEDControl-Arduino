@@ -93,7 +93,9 @@ void setup() {
     Strip.items[0].colors[0].rgb[2] = 0;
     Strip.items[0].colors[0].rgb[1] = 0;
 
-    STRIP.begin();
+        STRIP.begin();
+    Serial.begin(9600);
+    Serial.println("HELLO");
 
 //    Serial.println(Strip.items[0].colors[0].rgb[0]);
 //    Serial.println(Strip.items[0].colors[0].rgb[1]);
@@ -168,29 +170,50 @@ int parseCommand(){
     int value = 0;
 
     //Init strings for all of the seperate command values
-    char itemStr[1];
-    char colorStr[1];
-    char rgbStr[1];
-    char valueStr[3];
+    char itemStr[2];
+    char colorStr[2];
+    char rgbStr[2];
+    char valueStr[4];
+
+    // <c000FF>
 
 
     itemStr[0] = receivedChars[itemIndex];
+    itemStr[1] = '\0';
     colorStr[0] = receivedChars[colorIndex];
+    colorStr[1] = '\0';
     rgbStr[0] = receivedChars[rgbIndex];
+    rgbStr[1] = '\0';
 
     valueStr[0] = receivedChars[valueIndex];
     valueStr[1] = receivedChars[valueIndex + 1];
-    valueStr[3] = receivedChars[valueIndex + 2];
+    valueStr[2] = receivedChars[valueIndex + 2];
+    valueStr[3] = '\0';
+    // valueStr[2] = receivedChars[valueIndex + 2];
 
-    item = strtol(itemStr, NULL, 16);
-    color = strtol(colorStr, NULL, 16);
-    rgb = strtol(rgbStr, NULL, 16);
+    item = strtol(itemStr, NULL, 10);
+    color = strtol(colorStr, NULL, 10);
+    rgb = strtol(rgbStr, NULL, 10);
     value = strtol(valueStr, NULL, 16);
+
+    Serial.println(receivedChars);
+    Serial.print("Command Type: ");
+    Serial.println(receivedChars[0]);
+    Serial.print("Value: ");
+    Serial.println(value);
+    Serial.print("Item #: ");
+    Serial.println(item);
+    Serial.print("Color #: ");
+    Serial.println(color);
+    Serial.print("RGB Index: ");
+    Serial.println(rgb);
+    // <c001FF>
 
     switch (receivedChars[0])
     {
         case colorCommand:
-            if(value <= 255 && value >= 0){
+            if(value < 256 && value > -1){
+                Serial.println("Worked");
                 Strip.items[item].colors[color].rgb[rgb] = value;
             }
             break;
@@ -223,8 +246,7 @@ int parseCommand(){
         default:
             break;
     }
-    
-    
+    return 0;
 }
 
 void getCommand() {
@@ -233,6 +255,8 @@ void getCommand() {
     char startMark = '<';
     char endMark = '>';
     char recv;
+
+
  
     while (Serial.available() > 0 && newCommand == false) {
         recv = Serial.read();

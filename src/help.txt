@@ -1,0 +1,28 @@
+Start Item
+<s(item#)0001>
+stop
+<s(item#)0000>
+
+change item time
+<t(item#)00(time value, takes 3 chars, hex)>
+
+Add item
+<i000(value, 3 chars, not hex)>
+
+add color
+<a(item#)00(value, 3 chars, hex)>
+
+Change position (index command)
+<p(item#)00(value, 3 chars, hex)>
+ex: <p20000F>
+
+Change direction
+<d(item#)0000(1 or 0)>
+ex: <d200001>
+or <d200000>
+
+Change color length
+<l(item#)(color#)0(value, 3 chars, hex)>
+
+
+
