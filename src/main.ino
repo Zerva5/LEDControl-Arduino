@@ -87,13 +87,7 @@ void setup() {
         Item_init(&Strip.items[i], colorCount_d);
     }
 
-    Strip.items[0].colors[0].rgb[1] = 255;
-
-    Strip.items[0].curIndex = 10;
-    Strip.items[0].colors[0].rgb[2] = 0;
-    Strip.items[0].colors[0].rgb[1] = 0;
-
-        STRIP.begin();
+    STRIP.begin();
     Serial.begin(9600);
     Serial.println("HELLO");
 
