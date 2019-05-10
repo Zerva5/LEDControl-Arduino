@@ -23,7 +23,6 @@ bool newCommand = false;
 const int numChars = 33;
 char receivedChars[33];
 
-
 //Contains color data and the specific attributes of that color
 struct colorid {
     //char
@@ -116,7 +115,7 @@ void loop(){
     LED_default(&Strip);
     delay(50);
 //    Serial.println(Strip.items[0].t);
-  
+//   <c0000FF>
     
 }
 
@@ -249,8 +248,6 @@ void getCommand() {
     char startMark = '<';
     char endMark = '>';
     char recv;
-
-
  
     while (Serial.available() > 0 && newCommand == false) {
         recv = Serial.read();
