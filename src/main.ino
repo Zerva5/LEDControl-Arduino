@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <time.h>
 
 #define startCommand 's'
 #define timeCommand 't'
@@ -22,6 +23,8 @@ bool newCommand = false;
 
 const int numChars = 33;
 char receivedChars[33];
+
+const int randMax = 255;
 
 //Contains color data and the specific attributes of that color
 struct colorid {
@@ -79,6 +82,7 @@ Adafruit_NeoPixel STRIP (LEDCOUNT, 13, NEO_GRB + NEO_KHZ800);
 void setup() {
     //Zero out receivedChars cause idk this might help :(
     receivedChars[0] = '\0';
+    srand(time(NULL));
 
     //Initialize strips
     Strip_init(&Strip, itemCount_d);
@@ -113,10 +117,18 @@ void loop(){
 
 //    Serial.println(Strip.items[0].colors[0].test);
     LED_default(&Strip);
-    delay(50);
+    delay(40);
 //    Serial.println(Strip.items[0].t);
 //   <c0000FF>
     
+}
+
+void random_chase(LEDStrip * stripItem){
+    
+}
+
+void LED_default_init(LEDStrip * stripItem){
+
 }
 
 void LED_default(LEDStrip * stripItem){
@@ -136,7 +148,7 @@ void LED_default(LEDStrip * stripItem){
 
         if(stripItem->active == 1 && stripItem->items[i].t >= stripItem->items[i].maxt){
             if(stripItem->items[i].direction == 1){
-                stripItem->items[i].curIndex++;
+                stripItem->items[i].curInd/ex++;
             }else{
                 stripItem->items[i].curIndex--;
             }
@@ -189,17 +201,17 @@ int parseCommand(){
     rgb = strtol(rgbStr, NULL, 10);
     value = strtol(valueStr, NULL, 16);
 
-    Serial.println(receivedChars);
-    Serial.print("Command Type: ");
-    Serial.println(receivedChars[0]);
-    Serial.print("Value: ");
-    Serial.println(value);
-    Serial.print("Item #: ");
-    Serial.println(item);
-    Serial.print("Color #: ");
-    Serial.println(color);
-    Serial.print("RGB Index: ");
-    Serial.println(rgb);
+    // Serial.println(receivedChars);
+    // Serial.print("Command Type: ");
+    // Serial.println(receivedChars[0]);
+    // Serial.print("Value: ");
+    // Serial.println(value);
+    // Serial.print("Item #: ");
+    // Serial.println(item);
+    // Serial.print("Color #: ");
+    // Serial.println(color);
+    // Serial.print("RGB Index: ");
+    // Serial.println(rgb);
     // <c001FF>
 
     switch (receivedChars[0])
@@ -317,7 +329,7 @@ void ChangeColorCount(Item * item, int newColorCount){
     if(lengthChange > 0){
         item->colors = (colorID *)realloc(item->colors, sizeof(colorID) * newColorCount);
         for (int i = 0; i < lengthChange; i++) {
-            Color_init(&item->colors[i + item->colorCount], false);
+            Color_init(&item->colors[i + item->colorCount], true);
         }
     }else if(lengthChange < 0){
 
@@ -338,7 +350,7 @@ void Color_close(colorID * oldColor){
 
 int Item_close(Item * oldItem){
     free(oldItem->colors);
-    Serial.println("closed item");
+    // Serial.println("closed item");
     return 0;
 }
 
@@ -373,7 +385,7 @@ void Item_init(Item * newItem, int colorCount){
     newItem->colors = (colorID *)malloc(sizeof(colorID) * colorCount);
 
     for(int i = 0; i < colorCount; i = i + 1){
-        Color_init(&newItem->colors[i], false);
+        Color_init(&newItem->colors[i], true);
     }
 }
 
@@ -382,13 +394,14 @@ void Color_init(colorID * newColor, bool randomColor){
     newColor->len = newLen;
 
     if(randomColor == true){
-        newColor->rgb[0] = 0;
-        newColor->rgb[1] = 0;
-        newColor->rgb[2] = 0;
+
+        newColor->rgb[0] = rand() % 255;
+        newColor->rgb[1] = rand() % 255;
+        newColor->rgb[2] = rand() % 255;
     }else{
         newColor->rgb[0] = 255;
-        newColor->rgb[1] = 255;
-        newColor->rgb[2] = 255;
+        newColor->rgb[1] = 0;
+        newColor->rgb[2] = 0;
     }
 
 }
